@@ -28,10 +28,17 @@ public class SocialMediaController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Account account){
+
         Account newAccount = accountService.registerAccount(account);
+
         if(newAccount != null){
+
             return ResponseEntity.status(200).body(newAccount);
+
+        }else if(accountService.searchUsername(account) != null){
+            
+            return ResponseEntity.status(409).body("Username already exist");
         }
-        return null;
+        return ResponseEntity.status(400).body("Something went wrong");
     }
 }
