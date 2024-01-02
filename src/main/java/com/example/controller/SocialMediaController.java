@@ -41,4 +41,13 @@ public class SocialMediaController {
         }
         return ResponseEntity.status(400).body("Something went wrong");
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Account account){
+        Account currentAccount = accountService.login(account);
+        if(currentAccount != null){
+            return ResponseEntity.status(200).body(currentAccount);
+        }
+        return ResponseEntity.status(401).body("failed");
+    }
 }
