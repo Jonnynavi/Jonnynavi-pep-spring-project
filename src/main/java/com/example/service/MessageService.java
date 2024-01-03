@@ -1,4 +1,5 @@
 package com.example.service;
+import java.util.List;
 
 import com.example.entity.Message;
 import com.example.entity.Account;
@@ -30,4 +31,38 @@ public class MessageService {
 
         return null;
     }
+
+    public List<Message> getAllMessages(){
+        return messageRepository.findAll();
+    }
+
+    public Message getMessageById(int id){
+        return messageRepository.findById(id).orElse(null);
+    }
+
+    public Integer deleteMessageById(int id){
+        Message message = messageRepository.findById(id).orElse(null);
+        if(message != null){
+            messageRepository.deleteById(id);
+            return 1;
+        }
+        return null;
+    }
+
+    public int updateMessage(Message message, int id){
+        String messageTxt = message.getMessage_text();
+        boolean itExist = messageRepository.findById(id).orElse(null) != null;
+        if(messageTxt.isEmpty() || messageTxt.length() > 255 || !itExist){
+            return 0;
+        }
+        int col = messageRepository.updateText(messageTxt, id);
+        System.out.println("ITS HERE -----------> " + col);
+        return 1;
+    }
+
+    public List<Message> findMessagesAllByUserId(int id){
+        List<Message> messages = messageRepository.findMessagesByPostedBy(id);
+        return messages;
+    }
+
 }
