@@ -1,7 +1,10 @@
 package com.example.controller;
 
 import com.example.entity.Account;
+import com.example.entity.Message;
+
 import com.example.service.AccountService;
+import com.example.service.MessageService;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,9 +24,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class SocialMediaController {
 
     AccountService accountService;
+    MessageService messageService;
 
-    public SocialMediaController(AccountService accountService){
+    public SocialMediaController(AccountService accountService, MessageService messageService){
         this.accountService = accountService;
+        this.messageService = messageService;
     }
 
     @PostMapping("/register")
@@ -49,5 +54,14 @@ public class SocialMediaController {
             return ResponseEntity.status(200).body(currentAccount);
         }
         return ResponseEntity.status(401).body("failed");
+    }
+
+    @PostMapping("/messages")
+    public ResponseEntity<?> createMessage(@RequestBody Message message){
+        Message createdMessage = messageService.createMessage(message);
+        if(createdMessage == null){
+            return ResponseEntity.status(400).body("Client error");
+        }
+        return ResponseEntity.status(200).body(message);
     }
 }
